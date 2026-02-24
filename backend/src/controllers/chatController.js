@@ -1,14 +1,6 @@
 import chatService from '../services/chatService.js';
 
-/**
- * Chat Controller - Handles HTTP request/response
- * Business logic delegated to chatService
- */
-
-/**
- * @desc    Send a chat message and get AI response
- * @route   POST /api/chat
- */
+// Send a chat message and get AI response — POST /api/chat
 export const sendMessage = async (req, res, next) => {
     try {
         const { sessionId, message } = req.body;
@@ -26,10 +18,7 @@ export const sendMessage = async (req, res, next) => {
     }
 };
 
-/**
- * @desc    Send a chat message with streaming response + live status
- * @route   POST /api/chat/stream
- */
+// Send a chat message with streaming response — POST /api/chat/stream
 export const sendMessageStream = async (req, res) => {
     try {
         const { sessionId, message } = req.body;
@@ -56,10 +45,7 @@ export const sendMessageStream = async (req, res) => {
     }
 };
 
-/**
- * @desc    Get conversation history for a session
- * @route   GET /api/conversations/:sessionId
- */
+// Get conversation history — GET /api/conversations/:sessionId
 export const getConversation = (req, res, next) => {
     try {
         const { sessionId } = req.params;
@@ -83,10 +69,7 @@ export const getConversation = (req, res, next) => {
     }
 };
 
-/**
- * @desc    Get all sessions with last updated timestamp
- * @route   GET /api/sessions
- */
+// Get all sessions — GET /api/sessions
 export const getSessions = (req, res, next) => {
     try {
         const sessions = chatService.getAllSessions();
@@ -100,10 +83,7 @@ export const getSessions = (req, res, next) => {
     }
 };
 
-/**
- * @desc    Delete a session and all its messages
- * @route   DELETE /api/sessions/:sessionId
- */
+// Delete a session and all its messages — DELETE /api/sessions/:sessionId
 export const deleteSession = (req, res, next) => {
     try {
         const { sessionId } = req.params;
@@ -126,10 +106,7 @@ export const deleteSession = (req, res, next) => {
     }
 };
 
-/**
- * @desc    Clear all messages from a session (keep the session)
- * @route   DELETE /api/conversations/:sessionId
- */
+// Clear all messages from a session — DELETE /api/conversations/:sessionId
 export const clearConversation = (req, res, next) => {
     try {
         const { sessionId } = req.params;

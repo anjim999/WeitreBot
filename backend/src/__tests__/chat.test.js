@@ -36,7 +36,7 @@ function createTestApp() {
         }
     });
 
-    // POST /api/chat (mock - no LLM)
+    // POST /api/chat (mock — no LLM)
     testApp.post('/api/chat', (req, res) => {
         const { sessionId, message } = req.body;
 
@@ -73,7 +73,6 @@ function createTestApp() {
 
 describe('AI Support Assistant API', () => {
     beforeAll(() => {
-        // Use in-memory-like approach: init fresh DB
         initializeDatabase();
         app = createTestApp();
     });
@@ -82,9 +81,7 @@ describe('AI Support Assistant API', () => {
         closeDatabase();
     });
 
-    // ==========================================
-    // SESSION ENDPOINTS
-    // ==========================================
+    // --- SESSION ENDPOINTS ---
     describe('GET /api/sessions', () => {
         test('should return empty sessions list initially', async () => {
             const res = await request(app).get('/api/sessions');
@@ -94,9 +91,7 @@ describe('AI Support Assistant API', () => {
         });
     });
 
-    // ==========================================
-    // CHAT ENDPOINT
-    // ==========================================
+    // --- CHAT ENDPOINT ---
     describe('POST /api/chat', () => {
         test('should return 400 if sessionId is missing', async () => {
             const res = await request(app)
@@ -137,9 +132,7 @@ describe('AI Support Assistant API', () => {
         });
     });
 
-    // ==========================================
-    // CONVERSATION ENDPOINT
-    // ==========================================
+    // --- CONVERSATION ENDPOINT ---
     describe('GET /api/conversations/:sessionId', () => {
         test('should return 404 for non-existent session', async () => {
             const res = await request(app).get('/api/conversations/non-existent');
@@ -164,9 +157,7 @@ describe('AI Support Assistant API', () => {
         });
     });
 
-    // ==========================================
-    // DELETE SESSION
-    // ==========================================
+    // --- DELETE SESSION ---
     describe('DELETE /api/sessions/:sessionId', () => {
         test('should return 404 for non-existent session', async () => {
             const res = await request(app).delete('/api/sessions/non-existent');
@@ -189,9 +180,7 @@ describe('AI Support Assistant API', () => {
         });
     });
 
-    // ==========================================
-    // DATABASE QUERIES
-    // ==========================================
+    // --- DATABASE QUERIES ---
     describe('Database Queries', () => {
         test('should store and retrieve message pairs', async () => {
             const sid = 'context-test';

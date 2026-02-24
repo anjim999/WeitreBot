@@ -1,10 +1,4 @@
-/**
- * Request validation middleware
- */
-
-/**
- * Validate chat request body
- */
+// Validate chat request body
 export const validateChatRequest = (req, res, next) => {
     const { sessionId, message } = req.body;
 
@@ -36,9 +30,7 @@ export const validateChatRequest = (req, res, next) => {
     next();
 };
 
-/**
- * Validate sessionId param
- */
+// Validate sessionId param
 export const validateSessionId = (req, res, next) => {
     const { sessionId } = req.params;
 

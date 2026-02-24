@@ -1,12 +1,8 @@
 import { getDatabase } from './database.js';
 
-// ==========================================
 // SESSION QUERIES
-// ==========================================
 
-/**
- * Create a new session or return existing one
- */
+// Create a new session or return existing one
 export function createSession(sessionId) {
     const db = getDatabase();
     const existing = db.prepare('SELECT id, created_at, updated_at FROM sessions WHERE id = ?').get(sessionId);
@@ -21,35 +17,27 @@ export function createSession(sessionId) {
     return db.prepare('SELECT id, created_at, updated_at FROM sessions WHERE id = ?').get(sessionId);
 }
 
-/**
- * Update session's updated_at timestamp
- */
+// Update session's updated_at timestamp
 export function updateSessionTimestamp(sessionId) {
     const db = getDatabase();
     const stmt = db.prepare("UPDATE sessions SET updated_at = datetime('now') WHERE id = ?");
     stmt.run(sessionId);
 }
 
-/**
- * Update session title
- */
+// Update session title
 export function updateSessionTitle(sessionId, title) {
     const db = getDatabase();
     db.prepare('UPDATE sessions SET title = ? WHERE id = ?').run(title, sessionId);
 }
 
-/**
- * Check if session already has a title
- */
+// Check if session already has a title
 export function hasTitle(sessionId) {
     const db = getDatabase();
     const row = db.prepare('SELECT title FROM sessions WHERE id = ?').get(sessionId);
     return !!row?.title;
 }
 
-/**
- * Get all sessions ordered by last updated
- */
+// Get all sessions ordered by last updated
 export function getAllSessions() {
     const db = getDatabase();
     const sessions = db.prepare(`
@@ -69,17 +57,13 @@ export function getAllSessions() {
     return sessions;
 }
 
-/**
- * Get a specific session by ID
- */
+// Get a specific session by ID
 export function getSessionById(sessionId) {
     const db = getDatabase();
     return db.prepare('SELECT id, title, created_at, updated_at FROM sessions WHERE id = ?').get(sessionId);
 }
 
-/**
- * Delete a session and all its messages
- */
+// Delete a session and all its messages
 export function deleteSession(sessionId) {
     const db = getDatabase();
     const deleteMessages = db.prepare('DELETE FROM messages WHERE session_id = ?');
@@ -93,22 +77,16 @@ export function deleteSession(sessionId) {
     transaction(sessionId);
 }
 
-/**
- * Clear all messages for a session (keep the session)
- */
+// Clear all messages for a session (keep the session)
 export function clearMessages(sessionId) {
     const db = getDatabase();
     db.prepare('DELETE FROM messages WHERE session_id = ?').run(sessionId);
     updateSessionTimestamp(sessionId);
 }
 
-// ==========================================
-// MESSAGE QUERIES
-// ==========================================
+// --- MESSAGE QUERIES ---
 
-/**
- * Insert a new message
- */
+// Insert a new message
 export function insertMessage(sessionId, role, content, tokensUsed = 0) {
     const db = getDatabase();
     const stmt = db.prepare(
@@ -128,9 +106,7 @@ export function insertMessage(sessionId, role, content, tokensUsed = 0) {
     };
 }
 
-/**
- * Get all messages for a session in chronological order
- */
+// Get all messages for a session in chronological order
 export function getMessagesBySessionId(sessionId) {
     const db = getDatabase();
     return db.prepare(`
@@ -141,10 +117,7 @@ export function getMessagesBySessionId(sessionId) {
     `).all(sessionId);
 }
 
-/**
- * Get last N message pairs (user + assistant) for context
- * Returns last 5 pairs = 10 messages
- */
+// Get last N message pairs (user + assistant) for context
 export function getRecentMessagePairs(sessionId, pairCount = 5) {
     const db = getDatabase();
     const limit = pairCount * 2;

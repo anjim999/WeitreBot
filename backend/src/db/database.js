@@ -9,9 +9,7 @@ const DB_PATH = path.join(__dirname, '..', '..', 'support_assistant.db');
 
 let db;
 
-/**
- * Initialize SQLite database and create tables if they don't exist
- */
+// Initialize SQLite database and create tables
 export function initializeDatabase() {
     db = new Database(DB_PATH);
 
@@ -48,7 +46,7 @@ export function initializeDatabase() {
         CREATE INDEX IF NOT EXISTS idx_sessions_updated_at ON sessions(updated_at);
     `);
 
-    // Migration: Add title column to sessions (if not already present)
+    // Migration: add title column to sessions
     try {
         db.exec(`ALTER TABLE sessions ADD COLUMN title TEXT`);
     } catch (e) {
@@ -59,9 +57,7 @@ export function initializeDatabase() {
     return db;
 }
 
-/**
- * Get the database instance
- */
+// Get the database instance
 export function getDatabase() {
     if (!db) {
         return initializeDatabase();
@@ -69,9 +65,7 @@ export function getDatabase() {
     return db;
 }
 
-/**
- * Close the database connection
- */
+// Close the database connection
 export function closeDatabase() {
     if (db) {
         db.close();

@@ -2,10 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const SESSION_KEY = 'support_session_id';
 
-/**
- * Get the current session ID from localStorage
- * Creates a new one if it doesn't exist
- */
+// Get current session ID from localStorage (creates one if missing)
 export function getSessionId() {
     let sessionId = localStorage.getItem(SESSION_KEY);
     if (!sessionId) {
@@ -15,25 +12,19 @@ export function getSessionId() {
     return sessionId;
 }
 
-/**
- * Generate a new session ID (for "New Chat" button)
- */
+// Generate a new session ID (for "New Chat" button)
 export function createNewSession() {
     const sessionId = uuidv4();
     localStorage.setItem(SESSION_KEY, sessionId);
     return sessionId;
 }
 
-/**
- * Set a specific session ID (for loading old sessions)
- */
+// Set a specific session ID (for loading old sessions)
 export function setSessionId(sessionId) {
     localStorage.setItem(SESSION_KEY, sessionId);
 }
 
-/**
- * Format a timestamp to relative time
- */
+// Format a timestamp to relative time (e.g., "5m ago", "2d ago")
 export function formatTimestamp(dateString) {
     // SQLite datetime('now') is UTC but has no 'Z' suffix — append it
     const utcString = dateString?.endsWith('Z') ? dateString : dateString + 'Z';
@@ -55,9 +46,7 @@ export function formatTimestamp(dateString) {
     });
 }
 
-/**
- * Format timestamp for message display
- */
+// Format timestamp for message display (e.g., "02:30 PM")
 export function formatMessageTime(dateString) {
     const utcString = dateString?.endsWith('Z') ? dateString : dateString + 'Z';
     const date = new Date(utcString);

@@ -1,10 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import env from '../config/env.js';
 
-/**
- * LLM Service - Handles all interactions with Google Gemini
- * Supports both regular and streaming responses
- */
+// LLM service — handles all interactions with Google Gemini
 class LLMService {
     constructor() {
         this.genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
@@ -19,9 +16,7 @@ class LLMService {
         });
     }
 
-    /**
-     * Build the system prompt with document context and chat history
-     */
+    // Build the system prompt with document context and chat history
     buildPrompt(userMessage, documentContext, chatHistory = []) {
         let systemPrompt = `You are a helpful AI Support Assistant for our product/platform.
 
@@ -68,9 +63,7 @@ Remember: ONLY use the Product Documentation above. If the answer is not in the 
         return systemPrompt;
     }
 
-    /**
-     * Generate a regular (non-streaming) response
-     */
+    // Generate a regular (non-streaming) response
     async generateResponse(userMessage, documentContext, chatHistory = []) {
         try {
             const prompt = this.buildPrompt(userMessage, documentContext, chatHistory);
@@ -90,9 +83,7 @@ Remember: ONLY use the Product Documentation above. If the answer is not in the 
         }
     }
 
-    /**
-     * Generate a streaming response (yields chunks)
-     */
+    // Generate a streaming response (yields chunks)
     async *generateStreamResponse(userMessage, documentContext, chatHistory = []) {
         try {
             const prompt = this.buildPrompt(userMessage, documentContext, chatHistory);
@@ -116,10 +107,7 @@ Remember: ONLY use the Product Documentation above. If the answer is not in the 
         }
     }
 
-    /**
-     * Generate a short title for a chat session (like ChatGPT/Gemini)
-     * Uses a quick LLM call — runs async after first response
-     */
+    // Generate a short title for a chat session
     async generateTitle(userMessage, assistantReply) {
         try {
             const prompt = `Generate a very short title (3-5 words max) for this conversation. Return ONLY the title, nothing else. No quotes, no punctuation at the end.
@@ -131,7 +119,7 @@ Title:`;
 
             const result = await this.model.generateContent(prompt);
             const title = result.response.text().trim().replace(/^["']|["']$/g, '');
-            return title.substring(0, 50); // Safety cap
+            return title.substring(0, 50);
         } catch (error) {
             console.error('Title generation failed:', error.message);
             // Fallback: use first few words of user message
@@ -140,6 +128,5 @@ Title:`;
     }
 }
 
-// Singleton instance
 const llmService = new LLMService();
 export default llmService;

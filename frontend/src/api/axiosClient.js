@@ -1,11 +1,7 @@
 import axios from 'axios';
 import env from '../config/env.js';
 
-/**
- * Centralized Axios Client
- * All API services should import and use this client
- * instead of creating their own axios instances.
- */
+// Centralized axios client — all services use this instance
 const axiosClient = axios.create({
     baseURL: `${env.API_URL}/api`,
     headers: {

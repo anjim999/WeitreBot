@@ -2,44 +2,33 @@ import * as queries from '../db/queries.js';
 import ragService from './ragService.js';
 import llmService from './llmService.js';
 
-/**
- * Chat Service - Orchestrates the chat flow
- * Handles session management, RAG retrieval, and LLM calls
- */
+// Chat service — orchestrates session management, RAG retrieval, and LLM calls
 class ChatService {
-    /**
-     * Process a chat message (non-streaming)
-     * 1. Ensure session exists
-     * 2. Store user message in DB
-     * 3. Find relevant docs via RAG
-     * 4. Get recent chat history from DB (last 5 pairs)
-     * 5. Generate AI response
-     * 6. Store AI response in DB
-     */
+    // Process a chat message (non-streaming)
     async processMessage(sessionId, userMessage) {
-        // Step 1: Ensure session exists
+        // Ensure session exists
         queries.createSession(sessionId);
 
-        // Step 2: Store user message
+        // Store user message
         queries.insertMessage(sessionId, 'user', userMessage);
 
-        // Step 3: Find relevant docs via RAG (similarity search)
+        // Find relevant docs via RAG similarity search
         const { context, docsUsed, hasRelevantDocs } = ragService.buildContext(userMessage);
 
-        // Step 4: Get last 5 message pairs from SQLite for context
+        // Get last 5 message pairs from DB for context
         const recentHistory = queries.getRecentMessagePairs(sessionId, 5);
 
-        // Step 5: Generate AI response
+        // Generate AI response
         const { reply, tokensUsed } = await llmService.generateResponse(
             userMessage,
             context,
             recentHistory
         );
 
-        // Step 6: Store AI response in DB
+        // Store AI response in DB
         queries.insertMessage(sessionId, 'assistant', reply, tokensUsed);
 
-        // Step 7: Generate title for session (async, first message only)
+        // Generate title for session (first message only)
         let title = null;
         if (!queries.hasTitle(sessionId)) {
             title = await llmService.generateTitle(userMessage, reply);
@@ -55,22 +44,16 @@ class ChatService {
         };
     }
 
-    /**
-     * Process a chat message with streaming + live status updates
-     * Yields SSE events for each stage:
-     *   - status: searching, analyzing, generating
-     *   - chunk: streaming text
-     *   - complete: final result
-     */
+    // Process a chat message with streaming and live status updates
     async *processMessageStream(sessionId, userMessage) {
-        // Step 1: Session
+        // Initialize session
         yield { type: 'status', stage: 'session', message: 'Initializing session...' };
         queries.createSession(sessionId);
         queries.insertMessage(sessionId, 'user', userMessage);
 
-        // Step 2: RAG Search
+        // RAG search
         yield { type: 'status', stage: 'searching', message: 'Searching documentation...' };
-        await this.delay(400); // Small delay for visual effect
+        await this.delay(400);
 
         const { context, docsUsed, hasRelevantDocs } = ragService.buildContext(userMessage);
         yield {
@@ -81,12 +64,12 @@ class ChatService {
                 : 'No specific documentation match found'
         };
 
-        // Step 3: Get chat history
+        // Get chat history for context
         yield { type: 'status', stage: 'analyzing', message: 'Analyzing conversation context...' };
         await this.delay(300);
         const recentHistory = queries.getRecentMessagePairs(sessionId, 5);
 
-        // Step 4: Generate response
+        // Generate streaming response
         yield { type: 'status', stage: 'generating', message: 'Generating response...' };
         await this.delay(200);
 
@@ -111,10 +94,10 @@ class ChatService {
             }
         }
 
-        // Step 5: Store response
+        // Store response in DB
         queries.insertMessage(sessionId, 'assistant', fullResponse, tokensUsed);
 
-        // Step 6: Generate title (first message only, async)
+        // Generate title (first message only)
         let title = null;
         if (!queries.hasTitle(sessionId)) {
             try {
@@ -134,9 +117,7 @@ class ChatService {
         };
     }
 
-    /**
-     * Get all messages for a session
-     */
+    // Get all messages for a session
     getConversation(sessionId) {
         const session = queries.getSessionById(sessionId);
         if (!session) {
@@ -150,16 +131,12 @@ class ChatService {
         };
     }
 
-    /**
-     * Get all sessions
-     */
+    // Get all sessions
     getAllSessions() {
         return queries.getAllSessions();
     }
 
-    /**
-     * Delete a session
-     */
+    // Delete a session and its messages
     deleteSession(sessionId) {
         const session = queries.getSessionById(sessionId);
         if (!session) {
@@ -169,9 +146,7 @@ class ChatService {
         return true;
     }
 
-    /**
-     * Clear all messages from a session (keep the session)
-     */
+    // Clear all messages from a session (keep the session)
     clearConversation(sessionId) {
         const session = queries.getSessionById(sessionId);
         if (!session) {
@@ -181,9 +156,7 @@ class ChatService {
         return true;
     }
 
-    /**
-     * Small delay helper for visual status updates
-     */
+    // Small delay helper for visual status updates
     delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }

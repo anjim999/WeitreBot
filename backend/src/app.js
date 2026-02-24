@@ -12,21 +12,18 @@ import chatRoutes from './routes/chat.routes.js';
 // Initialize Express
 const app = express();
 
-// Initialize SQLite Database
+// Initialize SQLite database
 initializeDatabase();
 
-// ==========================================
-// SECURITY MIDDLEWARE
-// ==========================================
+// SECURITY MIDDLEWARE 
+
 app.use(helmet({
     crossOriginResourcePolicy: { policy: 'cross-origin' }
 }));
 
-// CORS - Allow local dev and production URLs
+// CORS — allow local dev and production URLs
 const allowedOrigins = [
     env.CLIENT_URL,
-    'http://localhost:5173',
-    'http://localhost:3000',
 ].filter(Boolean);
 
 app.use(cors({
@@ -49,9 +46,7 @@ app.use(express.json({ limit: '1mb' }));
 // General rate limiting
 app.use('/api', apiLimiter);
 
-// ==========================================
 // ROUTES
-// ==========================================
 
 // Health check
 app.get('/health', (req, res) => {
@@ -63,29 +58,24 @@ app.get('/health', (req, res) => {
     });
 });
 
-// API Routes
+// API routes
 app.use('/api', chatRoutes);
 
-// ==========================================
 // ERROR HANDLING
-// ==========================================
+
 app.use('*', notFoundHandler);
 app.use(errorHandler);
 
-// ==========================================
 // START SERVER
-// ==========================================
+
 const PORT = env.PORT;
 
 app.listen(PORT, () => {
     console.log(`
-╔══════════════════════════════════════════╗
-║   🚀 AI Support Assistant Backend       ║
-║──────────────────────────────────────────║
-║   Port:        ${PORT}                       ║
-║   Environment: ${env.NODE_ENV.padEnd(23)}║
-║   API URL:     http://localhost:${PORT}      ║
-╚══════════════════════════════════════════╝
+   🚀 AI Support Assistant Backend       
+   Port:        ${PORT}                       
+   Environment: ${env.NODE_ENV.padEnd(23)}
+ API URL:     http://localhost:${PORT}      
     `);
 });
 

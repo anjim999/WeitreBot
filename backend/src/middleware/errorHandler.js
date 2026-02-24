@@ -1,6 +1,4 @@
-/**
- * Global error handler middleware
- */
+// Global error handler middleware
 export const errorHandler = (err, req, res, next) => {
     console.error('❌ Error:', err.message);
 
@@ -30,9 +28,7 @@ export const errorHandler = (err, req, res, next) => {
     });
 };
 
-/**
- * 404 handler
- */
+// 404 handler
 export const notFoundHandler = (req, res) => {
     res.status(404).json({
         success: false,

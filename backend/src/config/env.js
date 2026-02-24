@@ -1,12 +1,12 @@
 import 'dotenv/config';
 
 const env = {
-    PORT: process.env.PORT || 5000,
-    NODE_ENV: process.env.NODE_ENV || 'development',
+    PORT: process.env.PORT,
+    NODE_ENV: process.env.NODE_ENV,
     GEMINI_API_KEY: process.env.GEMINI_API_KEY,
-    CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:5173',
-    RATE_LIMIT_WINDOW_MS: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 60000,
-    RATE_LIMIT_MAX_REQUESTS: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 20,
+    CLIENT_URL: process.env.CLIENT_URL,
+    RATE_LIMIT_WINDOW_MS: parseInt(process.env.RATE_LIMIT_WINDOW_MS),
+    RATE_LIMIT_MAX_REQUESTS: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS),
 };
 
 // Validate required env vars

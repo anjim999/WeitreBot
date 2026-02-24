@@ -5,11 +5,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-/**
- * RAG Service - Retrieval-Augmented Generation
- * Uses TF-IDF inspired keyword similarity search to find relevant docs
- * instead of sending the full docs.json to the LLM
- */
+// RAG service — TF-IDF similarity search to find relevant docs
 class RAGService {
     constructor() {
         this.documents = [];
@@ -33,9 +29,7 @@ class RAGService {
         this.loadDocuments();
     }
 
-    /**
-     * Load documents from docs.json and build TF-IDF index
-     */
+    // Load documents from docs.json and build TF-IDF index
     loadDocuments() {
         try {
             const docsPath = path.join(__dirname, '..', 'data', 'docs.json');
@@ -50,9 +44,7 @@ class RAGService {
         }
     }
 
-    /**
-     * Tokenize text into cleaned terms
-     */
+    // Tokenize text into cleaned terms
     tokenize(text) {
         return text
             .toLowerCase()
@@ -61,9 +53,7 @@ class RAGService {
             .filter(word => word.length > 2 && !this.stopWords.has(word));
     }
 
-    /**
-     * Build TF-IDF index for all documents
-     */
+    // Build TF-IDF index for all documents
     buildIndex() {
         const docCount = this.documents.length;
         const termDocCount = {};
@@ -94,9 +84,7 @@ class RAGService {
         }
     }
 
-    /**
-     * Calculate TF-IDF similarity score between query and a document
-     */
+    // Calculate TF-IDF similarity score between query and a document
     calculateSimilarity(queryTerms, docIndex) {
         const docTf = this.docTermFrequencies[docIndex];
         let score = 0;
@@ -110,12 +98,7 @@ class RAGService {
         return score;
     }
 
-    /**
-     * Find the most relevant documents for a given query
-     * @param {string} query - User's question
-     * @param {number} topK - Number of top results to return
-     * @returns {Array} Relevant documents sorted by relevance score
-     */
+    // Find the most relevant documents for a given query
     findRelevantDocs(query, topK = 3) {
         if (this.documents.length === 0) {
             return [];
@@ -133,7 +116,7 @@ class RAGService {
             score: this.calculateSimilarity(queryTerms, index)
         }));
 
-        // Filter docs with score > 0 and sort by relevance
+        // Filter and sort by relevance
         const relevant = scored
             .filter(doc => doc.score > 0)
             .sort((a, b) => b.score - a.score)
@@ -142,9 +125,7 @@ class RAGService {
         return relevant;
     }
 
-    /**
-     * Build context string from relevant documents
-     */
+    // Build context string from relevant documents
     buildContext(query) {
         const relevantDocs = this.findRelevantDocs(query, 3);
 
@@ -167,14 +148,11 @@ class RAGService {
         };
     }
 
-    /**
-     * Get all documents (for reference)
-     */
+    // Get all documents
     getAllDocs() {
         return this.documents;
     }
 }
 
-// Singleton instance
 const ragService = new RAGService();
 export default ragService;

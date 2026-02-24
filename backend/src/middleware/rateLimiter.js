@@ -1,9 +1,7 @@
 import rateLimit from 'express-rate-limit';
 import env from '../config/env.js';
 
-/**
- * General API rate limiter - per IP
- */
+// General API rate limiter — per IP
 export const apiLimiter = rateLimit({
     windowMs: env.RATE_LIMIT_WINDOW_MS,
     max: env.RATE_LIMIT_MAX_REQUESTS,
@@ -19,9 +17,7 @@ export const apiLimiter = rateLimit({
     }
 });
 
-/**
- * Stricter rate limiter for chat endpoint
- */
+// Stricter rate limiter for chat endpoint
 export const chatLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
     max: 15, // 15 messages per minute
