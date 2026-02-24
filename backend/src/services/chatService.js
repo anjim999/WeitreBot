@@ -39,11 +39,19 @@ class ChatService {
         // Step 6: Store AI response in DB
         queries.insertMessage(sessionId, 'assistant', reply, tokensUsed);
 
+        // Step 7: Generate title for session (async, first message only)
+        let title = null;
+        if (!queries.hasTitle(sessionId)) {
+            title = await llmService.generateTitle(userMessage, reply);
+            queries.updateSessionTitle(sessionId, title);
+        }
+
         return {
             reply,
             tokensUsed,
             docsUsed,
-            hasRelevantDocs
+            hasRelevantDocs,
+            title
         };
     }
 
@@ -56,12 +64,12 @@ class ChatService {
      */
     async *processMessageStream(sessionId, userMessage) {
         // Step 1: Session
-        yield { type: 'status', stage: 'session', message: '🔄 Initializing session...' };
+        yield { type: 'status', stage: 'session', message: 'Initializing session...' };
         queries.createSession(sessionId);
         queries.insertMessage(sessionId, 'user', userMessage);
 
         // Step 2: RAG Search
-        yield { type: 'status', stage: 'searching', message: '🔍 Searching documentation...' };
+        yield { type: 'status', stage: 'searching', message: 'Searching documentation...' };
         await this.delay(400); // Small delay for visual effect
 
         const { context, docsUsed, hasRelevantDocs } = ragService.buildContext(userMessage);
@@ -69,17 +77,17 @@ class ChatService {
             type: 'status',
             stage: 'docs_found',
             message: hasRelevantDocs
-                ? `📄 Found ${docsUsed.length} relevant document(s)`
-                : '📄 No specific documentation match found'
+                ? `Found ${docsUsed.length} relevant document(s)`
+                : 'No specific documentation match found'
         };
 
         // Step 3: Get chat history
-        yield { type: 'status', stage: 'analyzing', message: '🧠 Analyzing conversation context...' };
+        yield { type: 'status', stage: 'analyzing', message: 'Analyzing conversation context...' };
         await this.delay(300);
         const recentHistory = queries.getRecentMessagePairs(sessionId, 5);
 
         // Step 4: Generate response
-        yield { type: 'status', stage: 'generating', message: '✍️ Generating response...' };
+        yield { type: 'status', stage: 'generating', message: 'Generating response...' };
         await this.delay(200);
 
         let fullResponse = '';
@@ -106,11 +114,23 @@ class ChatService {
         // Step 5: Store response
         queries.insertMessage(sessionId, 'assistant', fullResponse, tokensUsed);
 
+        // Step 6: Generate title (first message only, async)
+        let title = null;
+        if (!queries.hasTitle(sessionId)) {
+            try {
+                title = await llmService.generateTitle(userMessage, fullResponse);
+                queries.updateSessionTitle(sessionId, title);
+            } catch (e) {
+                // Non-critical — ignore title generation failure
+            }
+        }
+
         yield {
             type: 'complete',
             tokensUsed,
             docsUsed,
-            hasRelevantDocs
+            hasRelevantDocs,
+            title
         };
     }
 
@@ -146,6 +166,18 @@ class ChatService {
             return false;
         }
         queries.deleteSession(sessionId);
+        return true;
+    }
+
+    /**
+     * Clear all messages from a session (keep the session)
+     */
+    clearConversation(sessionId) {
+        const session = queries.getSessionById(sessionId);
+        if (!session) {
+            return false;
+        }
+        queries.clearMessages(sessionId);
         return true;
     }
 

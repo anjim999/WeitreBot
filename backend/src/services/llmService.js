@@ -115,6 +115,29 @@ Remember: ONLY use the Product Documentation above. If the answer is not in the 
             yield { type: 'error', error: 'Failed to generate AI response. Please try again later.' };
         }
     }
+
+    /**
+     * Generate a short title for a chat session (like ChatGPT/Gemini)
+     * Uses a quick LLM call — runs async after first response
+     */
+    async generateTitle(userMessage, assistantReply) {
+        try {
+            const prompt = `Generate a very short title (3-5 words max) for this conversation. Return ONLY the title, nothing else. No quotes, no punctuation at the end.
+
+User: ${userMessage}
+Assistant: ${assistantReply.substring(0, 200)}
+
+Title:`;
+
+            const result = await this.model.generateContent(prompt);
+            const title = result.response.text().trim().replace(/^["']|["']$/g, '');
+            return title.substring(0, 50); // Safety cap
+        } catch (error) {
+            console.error('Title generation failed:', error.message);
+            // Fallback: use first few words of user message
+            return userMessage.split(' ').slice(0, 5).join(' ');
+        }
+    }
 }
 
 // Singleton instance

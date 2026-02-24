@@ -61,10 +61,19 @@ export async function deleteSession(sessionId) {
     return response.data;
 }
 
+/**
+ * Clear all messages from a session (keep the session)
+ */
+export async function clearConversation(sessionId) {
+    const response = await api.delete(`/conversations/${sessionId}`);
+    return response.data;
+}
+
 export default {
     sendMessage,
     sendMessageStream,
     getConversation,
     getSessions,
-    deleteSession
+    deleteSession,
+    clearConversation
 };

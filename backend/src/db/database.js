@@ -48,6 +48,13 @@ export function initializeDatabase() {
         CREATE INDEX IF NOT EXISTS idx_sessions_updated_at ON sessions(updated_at);
     `);
 
+    // Migration: Add title column to sessions (if not already present)
+    try {
+        db.exec(`ALTER TABLE sessions ADD COLUMN title TEXT`);
+    } catch (e) {
+        // Column already exists — ignore
+    }
+
     console.log('✅ SQLite database initialized');
     return db;
 }

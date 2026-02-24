@@ -52,9 +52,10 @@ const SessionSidebar = ({
             }}>
                 {sessions.map((session) => {
                     const isActive = session.id === currentSessionId;
-                    const title = session.first_message
-                        ? session.first_message.substring(0, 35) + (session.first_message.length > 35 ? '...' : '')
-                        : 'New Chat';
+                    const title = session.title
+                        || (session.first_message
+                            ? session.first_message.substring(0, 35) + (session.first_message.length > 35 ? '...' : '')
+                            : 'New Chat');
 
                     return (
                         <div

@@ -60,12 +60,6 @@ const MessageInput = ({ onSend, isLoading }) => {
                     </button>
                 </div>
             </form>
-            <p style={{
-                textAlign: 'center', fontSize: '11px',
-                color: 'rgba(255,255,255,0.2)', marginTop: '12px',
-            }}>
-                AI answers are based on product documentation only
-            </p>
         </div>
     );
 };

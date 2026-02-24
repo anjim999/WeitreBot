@@ -13,7 +13,8 @@ import {
     sendMessageStream,
     getConversation,
     getSessions,
-    deleteSession
+    deleteSession,
+    clearConversation
 } from '../services/chatService';
 
 const ChatPage = () => {
@@ -47,9 +48,12 @@ const ChatPage = () => {
         try {
             const data = await getConversation(sid);
             setMessages(data.messages || []);
-            if (data.messages?.length > 0) {
-                const firstMsg = data.messages[0];
-                setChatTitle(firstMsg.content.substring(0, 40));
+            // Try to get AI-generated title from sessions list
+            const session = sessions.find(s => s.id === sid);
+            if (session?.title) {
+                setChatTitle(session.title);
+            } else if (data.messages?.length > 0) {
+                setChatTitle(data.messages[0].content.substring(0, 40));
             }
         } catch (error) {
             setMessages([]);
@@ -73,9 +77,6 @@ const ChatPage = () => {
         setStreamingMessage('');
         setStatusStages([]);
 
-        if (!chatTitle) {
-            setChatTitle(messageText.substring(0, 40));
-        }
 
         try {
             const response = await sendMessageStream(sessionId, messageText);
@@ -114,6 +115,10 @@ const ChatPage = () => {
                             setMessages(prev => [...prev, assistantMsg]);
                             setStreamingMessage('');
                             setStatusStages([]);
+                            // Use AI-generated title if available
+                            if (data.title) {
+                                setChatTitle(data.title);
+                            }
                         } else if (data.type === 'error') {
                             toast.error(data.error || 'Failed to get response');
                         }
@@ -182,6 +187,39 @@ const ChatPage = () => {
         handleSend(text);
     }, [handleSend]);
 
+    // Handle clear chat (remove messages, keep session)
+    const handleClearChat = useCallback(async () => {
+        try {
+            await clearConversation(sessionId);
+            setMessages([]);
+            setChatTitle('');
+            setStreamingMessage('');
+            setStatusStages([]);
+            toast.success('Chat cleared');
+        } catch (error) {
+            toast.error('Failed to clear chat');
+        }
+    }, [sessionId]);
+
+    // Handle delete chat (remove session entirely)
+    const handleDeleteChat = useCallback(async () => {
+        try {
+            await deleteSession(sessionId);
+            setSessions(prev => prev.filter(s => s.id !== sessionId));
+
+            const newId = createNewSession();
+            setCurrentSessionId(newId);
+            setMessages([]);
+            setChatTitle('');
+            setStreamingMessage('');
+            setStatusStages([]);
+            toast.success('Chat deleted');
+            loadSessions();
+        } catch (error) {
+            toast.error('Failed to delete chat');
+        }
+    }, [sessionId]);
+
     return (
         <div style={{ height: '100vh', display: 'flex', overflow: 'hidden' }}>
             {/* Sidebar */}
@@ -218,6 +256,9 @@ const ChatPage = () => {
                     title={chatTitle}
                     sidebarOpen={sidebarOpen}
                     onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+                    onClearChat={handleClearChat}
+                    onDeleteChat={handleDeleteChat}
+                    hasMessages={messages.length > 0}
                 />
 
                 {/* Empty State or Messages */}

@@ -35,7 +35,9 @@ export function setSessionId(sessionId) {
  * Format a timestamp to relative time
  */
 export function formatTimestamp(dateString) {
-    const date = new Date(dateString);
+    // SQLite datetime('now') is UTC but has no 'Z' suffix — append it
+    const utcString = dateString?.endsWith('Z') ? dateString : dateString + 'Z';
+    const date = new Date(utcString);
     const now = new Date();
     const diffMs = now - date;
     const diffMins = Math.floor(diffMs / 60000);
@@ -57,7 +59,8 @@ export function formatTimestamp(dateString) {
  * Format timestamp for message display
  */
 export function formatMessageTime(dateString) {
-    const date = new Date(dateString);
+    const utcString = dateString?.endsWith('Z') ? dateString : dateString + 'Z';
+    const date = new Date(utcString);
     return date.toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit',

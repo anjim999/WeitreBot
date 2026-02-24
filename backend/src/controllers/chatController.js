@@ -125,3 +125,29 @@ export const deleteSession = (req, res, next) => {
         next(error);
     }
 };
+
+/**
+ * @desc    Clear all messages from a session (keep the session)
+ * @route   DELETE /api/conversations/:sessionId
+ */
+export const clearConversation = (req, res, next) => {
+    try {
+        const { sessionId } = req.params;
+
+        const cleared = chatService.clearConversation(sessionId);
+
+        if (!cleared) {
+            return res.status(404).json({
+                success: false,
+                error: 'Session not found'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Conversation cleared successfully'
+        });
+    } catch (error) {
+        next(error);
+    }
+};

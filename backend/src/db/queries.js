@@ -31,6 +31,23 @@ export function updateSessionTimestamp(sessionId) {
 }
 
 /**
+ * Update session title
+ */
+export function updateSessionTitle(sessionId, title) {
+    const db = getDatabase();
+    db.prepare('UPDATE sessions SET title = ? WHERE id = ?').run(title, sessionId);
+}
+
+/**
+ * Check if session already has a title
+ */
+export function hasTitle(sessionId) {
+    const db = getDatabase();
+    const row = db.prepare('SELECT title FROM sessions WHERE id = ?').get(sessionId);
+    return !!row?.title;
+}
+
+/**
  * Get all sessions ordered by last updated
  */
 export function getAllSessions() {
@@ -38,6 +55,7 @@ export function getAllSessions() {
     const sessions = db.prepare(`
         SELECT 
             s.id,
+            s.title,
             s.created_at,
             s.updated_at,
             COUNT(m.id) as message_count,
@@ -56,7 +74,7 @@ export function getAllSessions() {
  */
 export function getSessionById(sessionId) {
     const db = getDatabase();
-    return db.prepare('SELECT id, created_at, updated_at FROM sessions WHERE id = ?').get(sessionId);
+    return db.prepare('SELECT id, title, created_at, updated_at FROM sessions WHERE id = ?').get(sessionId);
 }
 
 /**
@@ -73,6 +91,15 @@ export function deleteSession(sessionId) {
     });
 
     transaction(sessionId);
+}
+
+/**
+ * Clear all messages for a session (keep the session)
+ */
+export function clearMessages(sessionId) {
+    const db = getDatabase();
+    db.prepare('DELETE FROM messages WHERE session_id = ?').run(sessionId);
+    updateSessionTimestamp(sessionId);
 }
 
 // ==========================================
@@ -134,9 +161,12 @@ export function getRecentMessagePairs(sessionId, pairCount = 5) {
 export default {
     createSession,
     updateSessionTimestamp,
+    updateSessionTitle,
+    hasTitle,
     getAllSessions,
     getSessionById,
     deleteSession,
+    clearMessages,
     insertMessage,
     getMessagesBySessionId,
     getRecentMessagePairs

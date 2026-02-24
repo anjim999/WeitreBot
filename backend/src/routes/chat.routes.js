@@ -3,6 +3,7 @@ import {
     sendMessage,
     sendMessageStream,
     getConversation,
+    clearConversation,
     getSessions,
     deleteSession
 } from '../controllers/chatController.js';
@@ -27,6 +28,9 @@ router.post('/chat/stream', chatLimiter, validateChatRequest, sendMessageStream)
 
 // GET /api/conversations/:sessionId - Get conversation history
 router.get('/conversations/:sessionId', validateSessionId, getConversation);
+
+// DELETE /api/conversations/:sessionId - Clear all messages (keep session)
+router.delete('/conversations/:sessionId', validateSessionId, clearConversation);
 
 // ==========================================
 // SESSION ENDPOINTS
