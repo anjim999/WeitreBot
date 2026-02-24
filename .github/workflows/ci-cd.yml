@@ -1,0 +1,71 @@
+name: CI - Tests
+
+on:
+  push:
+    branches: [main, stage, dev]
+  pull_request:
+    branches: [main, stage]
+
+    
+env:
+  NODE_VERSION: '18.x'
+
+jobs:
+  # Lint and Test Backend
+  backend-test:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: ./backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for syntax errors
+        run: node --check src/app.js
+
+      - name: Run tests
+        run: npm test
+        env:
+          NODE_ENV: test
+          GEMINI_API_KEY: test-key-for-ci
+          CLIENT_URL: http://localhost:5173
+
+  # Build Frontend
+  frontend-test:
+    name: Frontend Build
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: ./frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build

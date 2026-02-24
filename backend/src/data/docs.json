@@ -1,0 +1,92 @@
+[
+    {
+        "id": 1,
+        "title": "Account Registration",
+        "content": "To create an account, click the 'Sign Up' button on the homepage. Fill in your name, email address, and create a password (minimum 8 characters with at least one number and one special character). You'll receive a verification email within 5 minutes. Click the link in the email to activate your account."
+    },
+    {
+        "id": 2,
+        "title": "Reset Password",
+        "content": "To reset your password, go to Settings > Security > Change Password. Enter your current password and your new password. Your new password must be at least 8 characters long with at least one uppercase letter, one number, and one special character. If you've forgotten your current password, click 'Forgot Password' on the login page and follow the email instructions."
+    },
+    {
+        "id": 3,
+        "title": "Refund Policy",
+        "content": "Refunds are available within 14 days of purchase for all paid plans. To request a refund, go to Settings > Billing > Request Refund or contact our support team. Refunds are processed within 5-7 business days and will be credited back to the original payment method. Partial refunds are available for annual plans if you've used the service for less than 30 days."
+    },
+    {
+        "id": 4,
+        "title": "Pricing Plans",
+        "content": "We offer three pricing plans: Starter ($9/month) - includes 1,000 API calls, 1 project, email support. Professional ($29/month) - includes 10,000 API calls, 5 projects, priority support, custom branding. Enterprise ($99/month) - includes unlimited API calls, unlimited projects, 24/7 phone support, dedicated account manager, SSO integration, and SLA guarantee."
+    },
+    {
+        "id": 5,
+        "title": "API Integration",
+        "content": "Our REST API uses JSON format and requires an API key for authentication. To get your API key, go to Settings > Developer > API Keys. Include the key as a Bearer token in the Authorization header. API documentation is available at docs.example.com/api. Rate limits are 100 requests per minute for Starter, 500 for Professional, and unlimited for Enterprise plans."
+    },
+    {
+        "id": 6,
+        "title": "Data Export",
+        "content": "You can export your data at any time from Settings > Data > Export. Supported formats include CSV, JSON, and PDF. Data export includes all your projects, conversations, analytics, and user data. Large exports may take up to 24 hours and you'll receive an email with the download link when ready."
+    },
+    {
+        "id": 7,
+        "title": "Team Management",
+        "content": "To add team members, go to Settings > Team > Invite Members. Enter their email addresses and assign roles: Admin (full access), Editor (can modify projects), or Viewer (read-only access). Team members receive an email invitation. The Starter plan supports 1 member, Professional supports up to 10, and Enterprise supports unlimited members."
+    },
+    {
+        "id": 8,
+        "title": "Supported Languages",
+        "content": "Our platform supports 15 languages: English, Spanish, French, German, Italian, Portuguese, Dutch, Russian, Chinese (Simplified), Chinese (Traditional), Japanese, Korean, Arabic, Hindi, and Turkish. You can change your language preference from Settings > General > Language. All UI elements and help documentation are available in these languages."
+    },
+    {
+        "id": 9,
+        "title": "Two-Factor Authentication",
+        "content": "For enhanced security, enable Two-Factor Authentication (2FA) from Settings > Security > Two-Factor Authentication. We support authenticator apps (Google Authenticator, Authy) and SMS verification. After enabling 2FA, you'll need to enter a verification code each time you sign in. We also provide backup recovery codes in case you lose access to your 2FA device."
+    },
+    {
+        "id": 10,
+        "title": "Browser Compatibility",
+        "content": "Our platform is optimized for the latest versions of Chrome, Firefox, Safari, and Microsoft Edge. We recommend using Chrome or Firefox for the best experience. JavaScript must be enabled, and cookies should be allowed for session management. Mobile browsers on iOS Safari and Android Chrome are also fully supported."
+    },
+    {
+        "id": 11,
+        "title": "Contact Support",
+        "content": "You can reach our support team through multiple channels: Email at support@example.com (response within 24 hours), Live Chat available Monday-Friday 9AM-6PM EST, Phone support at 1-800-555-0199 (Enterprise plan only). You can also submit a ticket from Settings > Help > Contact Support. Our knowledge base at help.example.com has articles and video tutorials."
+    },
+    {
+        "id": 12,
+        "title": "File Upload Limits",
+        "content": "File upload limits vary by plan: Starter allows files up to 10MB each with 1GB total storage. Professional allows files up to 50MB each with 10GB total storage. Enterprise allows files up to 200MB each with unlimited storage. Supported file formats include PDF, DOCX, TXT, CSV, JSON, PNG, JPG, and SVG."
+    },
+    {
+        "id": 13,
+        "title": "Data Privacy and Security",
+        "content": "We take data privacy seriously. All data is encrypted at rest using AES-256 and in transit using TLS 1.3. We are SOC 2 Type II certified and GDPR compliant. Data is stored in secure cloud servers with 99.9% uptime SLA. We do not sell or share your data with third parties. You can request complete data deletion from Settings > Privacy > Delete Account."
+    },
+    {
+        "id": 14,
+        "title": "Notifications Settings",
+        "content": "Manage your notifications from Settings > Notifications. You can configure email notifications for: new messages, project updates, billing alerts, and security events. Push notifications are available for our mobile app. You can set quiet hours to prevent notifications during specific times. Weekly digest emails summarize your account activity."
+    },
+    {
+        "id": 15,
+        "title": "Account Deletion",
+        "content": "To delete your account, go to Settings > Privacy > Delete Account. This action is irreversible and will permanently remove all your data including projects, conversations, and files within 30 days. You'll receive a confirmation email before deletion. Active subscriptions will be cancelled and prorated refunds will be issued for unused time."
+    },
+    {
+        "id": 16,
+        "title": "Webhooks",
+        "content": "Set up webhooks to receive real-time event notifications. Go to Settings > Developer > Webhooks to add endpoint URLs. Events include: message.received, project.updated, user.joined, and billing.payment. Webhooks use HMAC-SHA256 for signature verification. Failed deliveries are retried up to 3 times with exponential backoff."
+    },
+    {
+        "id": 17,
+        "title": "Mobile App",
+        "content": "Our mobile app is available for iOS (iPhone and iPad) and Android devices. Download from the App Store or Google Play Store by searching 'SupportPro'. The mobile app supports push notifications, offline mode for reading conversations, and biometric login (Face ID / Fingerprint). The app syncs automatically with the web platform."
+    },
+    {
+        "id": 18,
+        "title": "Uptime and Reliability",
+        "content": "We guarantee 99.9% uptime for all paid plans with our SLA. Our infrastructure uses multi-region redundancy across AWS data centers. You can check real-time status at status.example.com. Scheduled maintenance is performed during weekends with advance notice of 48 hours. In case of outages, updates are posted on our status page and sent via email."
+    }
+]
