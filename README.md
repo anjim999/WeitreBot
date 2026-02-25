@@ -2,7 +2,7 @@
 
 A full-stack AI-powered support assistant built with React, Node.js, SQLite, and Google Gemini AI. The assistant answers user questions strictly based on product documentation using RAG (Retrieval-Augmented Generation) with TF-IDF similarity search, maintains session-wise conversation context, and provides real-time streaming responses with live status updates.
 
-![Node.js](https://img.shields.io/badge/Node.js-18+-green) ![React](https://img.shields.io/badge/React-18-blue) ![SQLite](https://img.shields.io/badge/SQLite-3-lightblue) ![Gemini](https://img.shields.io/badge/Gemini_AI-2.0_Flash-purple)
+![Node.js](https://img.shields.io/badge/Node.js-20+-green) ![React](https://img.shields.io/badge/React-18-blue) ![SQLite](https://img.shields.io/badge/SQLite-3-lightblue) ![Gemini](https://img.shields.io/badge/Gemini_AI-2.5_Flash-purple)
 
 ---
 
@@ -115,7 +115,7 @@ weitre-ai/
 ## 🚀 Quick Start
 
 ### Prerequisites
-- **Node.js 18+** (check: `node --version`)
+- **Node.js 20+** (check: `node --version`)
 - **npm 9+** (check: `npm --version`)
 - **Google Gemini API key** — Get free at [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
 
