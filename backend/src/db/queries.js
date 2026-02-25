@@ -113,7 +113,7 @@ export function getMessagesBySessionId(sessionId) {
         SELECT id, session_id, role, content, tokens_used, created_at
         FROM messages
         WHERE session_id = ?
-        ORDER BY created_at ASC
+        ORDER BY id ASC
     `).all(sessionId);
 }
 
@@ -126,7 +126,7 @@ export function getRecentMessagePairs(sessionId, pairCount = 5) {
         SELECT id, session_id, role, content, created_at
         FROM messages
         WHERE session_id = ?
-        ORDER BY created_at DESC
+        ORDER BY id DESC
         LIMIT ?
     `).all(sessionId, limit).reverse();
 }
